@@ -3,19 +3,21 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private Vector2 moveInput = Vector2.zero;
     private float moveAccel = 10f;
     private float maxSpeed = 10f;
-    private float jumpPower = 2f;
     private bool jumpInput = false;
+    private float jumpPower = 2f;
 
     private PlayerControls controls;
     private Rigidbody _rigidbody;
-    private Vector2 moveInput;
+    private PlayerGroundChecker groundChecker;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         controls = new PlayerControls(); // new로해도 좋은가요?
+        groundChecker = GetComponent<PlayerGroundChecker>();
 
         //나중에 팩토리패턴으로
         controls.Player.Move.started += OnMove;
@@ -69,8 +71,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        // && Raycast에 닿는다면 점프 ㄱㄱ
-        if (jumpInput)
+        if (jumpInput && groundChecker.IsGrounded())
         {
             _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
         }
