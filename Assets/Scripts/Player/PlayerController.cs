@@ -4,20 +4,19 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private Vector2 moveInput = Vector2.zero;
-    private float moveAccel = 10f;
-    private float maxSpeed = 10f;
     private bool jumpInput = false;
-    private float jumpPower = 2f;
 
     private PlayerControls controls;
-    private Rigidbody _rigidbody;
+    private Player player;
     private PlayerGroundChecker groundChecker;
+    private Rigidbody _rigidbody;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
-        controls = new PlayerControls(); // new로해도 좋은가요?
+        controls = new PlayerControls(); // new?
+        player = GetComponent<Player>();
         groundChecker = GetComponent<PlayerGroundChecker>();
+        _rigidbody = GetComponent<Rigidbody>();
 
         //나중에 팩토리패턴으로
         controls.Player.Move.started += OnMove;
@@ -58,9 +57,9 @@ public class PlayerController : MonoBehaviour
         Vector3 horizontalVelocity = new Vector3(velocity.x, 0, velocity.z);
 
         // 속도 제한
-        if (horizontalVelocity.magnitude < maxSpeed)
+        if (horizontalVelocity.magnitude < player.MaxSpeed)
         {
-            _rigidbody.AddForce(moveDir * moveAccel, ForceMode.Acceleration);
+            _rigidbody.AddForce(moveDir * player.Accelerate, ForceMode.Acceleration);
         }
     }
 
@@ -73,7 +72,7 @@ public class PlayerController : MonoBehaviour
     {
         if (jumpInput && groundChecker.IsGrounded())
         {
-            _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+            _rigidbody.AddForce(Vector2.up * player.JumpPower, ForceMode.Impulse);
         }
     }
 }
