@@ -5,17 +5,20 @@ public class PlayerController : MonoBehaviour
 {
     private Vector2 moveInput = Vector2.zero;
     private bool jumpInput = false;
+    Ray cursorSensorPosition;
 
     private PlayerControls controls;
     private Player player;
     private PlayerGroundChecker groundChecker;
+    private PlayerCursorSensor cursorSensor;
     private Rigidbody _rigidbody;
 
     private void Awake()
     {
-        controls = new PlayerControls(); // new?
+        controls = new PlayerControls(); // C# 스크립트
         player = GetComponent<Player>();
         groundChecker = GetComponent<PlayerGroundChecker>();
+        cursorSensor = GetComponent<PlayerCursorSensor>();
         _rigidbody = GetComponent<Rigidbody>();
 
         //나중에 팩토리패턴으로
@@ -30,6 +33,11 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         controls.Player.Enable();
+    }
+
+    private void Update()
+    {
+        Check();
     }
 
     private void FixedUpdate()
@@ -74,5 +82,11 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(Vector2.up * player.JumpPower, ForceMode.Impulse);
         }
+    }
+
+    private void Check()
+    {
+        cursorSensorPosition = Camera.main.ScreenPointToRay(Input.mousePosition);
+        cursorSensor.IsInteraction(cursorSensorPosition);
     }
 }

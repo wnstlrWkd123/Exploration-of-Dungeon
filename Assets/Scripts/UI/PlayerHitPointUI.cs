@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerHitPointUI : MonoBehaviour
 {
-    public Image hitPointBar;
+    [SerializeField] private Image hitPointBar;
 
     private void OnEnable()
     {

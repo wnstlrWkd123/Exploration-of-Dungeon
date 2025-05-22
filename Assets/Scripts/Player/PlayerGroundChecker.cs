@@ -5,15 +5,15 @@ public class PlayerGroundChecker : MonoBehaviour
     private float checkDistance = 1f;
 
     [SerializeField] private LayerMask groundLayer;
-    private Transform rayOrigin;
+    private Transform ray;
 
     private void Awake()
     {
-        rayOrigin = transform;
+        ray = transform;
     }
 
     public bool IsGrounded()
     {
-        return Physics.Raycast(rayOrigin.position, Vector3.down, checkDistance, groundLayer);
+        return Physics.Raycast(ray.position, Vector3.down, checkDistance, groundLayer);
     }
 }
