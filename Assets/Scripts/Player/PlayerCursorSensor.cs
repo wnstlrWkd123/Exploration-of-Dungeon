@@ -15,7 +15,11 @@ public class PlayerCursorSensor : MonoBehaviour
                 EventBus.Publish("InteractionText", true);
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("올라타기에는 위험해 보이는 보트이다.");
+                    Item item = hitInfo.collider.GetComponent<Item>();
+                    if (item != null)
+                    {
+                        EventBus.Publish("ShowItemPanel", item);
+                    }
                 }
             }
             else
