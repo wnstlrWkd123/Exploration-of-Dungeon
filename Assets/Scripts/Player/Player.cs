@@ -38,9 +38,29 @@ public class Player : MonoBehaviour
         currentHitPoint = maxHitPoint;
     }
 
-    public void TakeDamage(float damage)
+    private void OnEnable()
     {
-        currentHitPoint -= damage;
+        EventBus.Subscribe("Heal", Heal);
+        EventBus.Subscribe("TakeDamage", TakeDamage);
+    }
+
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe("Heal", Heal);
+        EventBus.Unsubscribe("TakeDamage", TakeDamage);
+    }
+
+    public void Heal(object value)
+    {
+        currentHitPoint += (float)value;
+        currentHitPoint = Mathf.Clamp(currentHitPoint, 0, maxHitPoint);
+
+        EventBus.Publish("PlayerHitPointChanged", currentHitPoint / maxHitPoint);
+    }
+
+    public void TakeDamage(object damage)
+    {
+        currentHitPoint -= (float)damage;
         currentHitPoint = Mathf.Clamp(currentHitPoint, 0, maxHitPoint);
 
         EventBus.Publish("PlayerHitPointChanged", currentHitPoint / maxHitPoint);

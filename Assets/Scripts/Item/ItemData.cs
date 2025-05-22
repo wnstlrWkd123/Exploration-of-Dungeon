@@ -2,8 +2,8 @@ using UnityEngine;
 
 public enum ItemType
 {
-    Consumable,
-    Resource
+    Resource,
+    Consumable
 }
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Item/ItemData")]

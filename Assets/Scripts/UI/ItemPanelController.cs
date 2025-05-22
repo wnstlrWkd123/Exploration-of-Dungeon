@@ -35,7 +35,12 @@ public class ItemPanelController : MonoBehaviour
             resourcePanel.SetActive(false);
             Time.timeScale = 1f;
         });
-        useButton.onClick.AddListener(() => Debug.Log("사용하기눌렀습니다."));
+        useButton.onClick.AddListener(() =>
+        {
+            ((ConsumableItem)currentItem).UseItem();
+            consumablePanel.SetActive(false);
+            Time.timeScale = 1f;
+        });
         cancelButton.onClick.AddListener(() =>
         {
             consumablePanel.SetActive(false);
@@ -43,15 +48,27 @@ public class ItemPanelController : MonoBehaviour
         });
     }
 
+    private void OnDisable()
+    {
+        EventBus.Unsubscribe("ShowItemPanel", param =>
+        {
+            currentItem = param as Item;
+            if (currentItem != null)
+            {
+                ShowCorrectPanel(currentItem.itemData);
+            }
+        });
+    }
+
     private void ShowCorrectPanel(ItemData data)
     {
         switch (data.itemType)
         {
-            case ItemType.Consumable:
-                SetConsumablePanel(data);
-                break;
             case ItemType.Resource:
                 SetResourcePanel(data);
+                break;
+            case ItemType.Consumable:
+                SetConsumablePanel(data);
                 break;
         }
     }
