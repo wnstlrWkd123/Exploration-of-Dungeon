@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerCursorSensor : MonoBehaviour
 {
@@ -7,6 +8,12 @@ public class PlayerCursorSensor : MonoBehaviour
 
     public void IsInteraction(Ray ray)
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            EventBus.Publish("InteractionText", false);
+            return;
+        }
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, maxDistance, layerMask))
         {
             float distance = Vector3.Distance(transform.position, hitInfo.point);
