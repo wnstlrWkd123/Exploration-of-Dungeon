@@ -17,8 +17,10 @@ public class BuffItem : ConsumableItem
         switch (type)
         {
             case BuffType.Speed:
+                EventBus.Publish("SpeedBuff", new BuffData(value, duration));
                 break;
             case BuffType.Jump:
+                EventBus.Publish("JumpBuff", new BuffData(value, duration));
                 break;
         }
 

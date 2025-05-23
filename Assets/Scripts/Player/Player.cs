@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -21,16 +22,12 @@ public class Player : MonoBehaviour
     }
 
     private float maxSpeed = 10f; // 최대속도
-    public float MaxSpeed
-    {
-        get { return maxSpeed; }
-    }
+    private float additionalMaxSpeed = 0f; // 추가 최대속도
+    public float MaxSpeed => maxSpeed + additionalMaxSpeed;
 
     private float jumpPower = 2f; // 점프력
-    public float JumpPower
-    {
-        get { return jumpPower; }
-    }
+    private float additionalJumpPower = 0f; // 추가 점프력
+    public float JumpPower => jumpPower + additionalJumpPower;
 
     private void Awake()
     {
@@ -41,12 +38,16 @@ public class Player : MonoBehaviour
     {
         EventBus.Subscribe("Heal", Heal);
         EventBus.Subscribe("TakeDamage", TakeDamage);
+        EventBus.Subscribe("SpeedBuff", (object data) => SpeedBuff((BuffData)data));
+        EventBus.Subscribe("JumpBuff", (object data) => JumpBuff((BuffData)data));
     }
 
     private void OnDisable()
     {
         EventBus.Unsubscribe("Heal", Heal);
         EventBus.Unsubscribe("TakeDamage", TakeDamage);
+        EventBus.Unsubscribe("SpeedBuff", (object data) => SpeedBuff((BuffData)data));
+        EventBus.Unsubscribe("JumpBuff", (object data) => JumpBuff((BuffData)data));
     }
 
     public void Heal(object value)
@@ -63,5 +64,29 @@ public class Player : MonoBehaviour
         currentHitPoint = Mathf.Clamp(currentHitPoint, 0, maxHitPoint);
 
         EventBus.Publish("PlayerHitPointChanged", currentHitPoint / maxHitPoint);
+    }
+
+    private void SpeedBuff(BuffData data)
+    {
+        StartCoroutine(SpeedBuffRoutine(data.value, data.duration));
+    }
+
+    private IEnumerator SpeedBuffRoutine(float value, float duration)
+    {
+        additionalMaxSpeed += value;
+        yield return new WaitForSeconds(duration);
+        additionalMaxSpeed -= value;
+    }
+
+    private void JumpBuff(BuffData data)
+    {
+        StartCoroutine(JumpBuffRoutine(data.value, data.duration));
+    }
+
+    private IEnumerator JumpBuffRoutine(float value, float duration)
+    {
+        additionalJumpPower += value;
+        yield return new WaitForSeconds(duration);
+        additionalJumpPower -= value;
     }
 }

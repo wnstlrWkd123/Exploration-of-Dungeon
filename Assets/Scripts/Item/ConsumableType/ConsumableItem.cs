@@ -8,8 +8,8 @@ public enum ConsumableType
 
 public class ConsumableItem : Item
 {
-    [SerializeField] protected ConsumableType consumableType;
     [SerializeField] protected int itemCount;
+    [SerializeField] protected ConsumableType consumableType;
 
     public virtual void UseItem()
     {
