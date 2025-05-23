@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,17 +19,20 @@ public class ItemPanelController : MonoBehaviour
     public Button cancelButton;
 
     private Item currentItem;
+    private Action<object> showItemHandler;
 
     private void OnEnable()
     {
-        EventBus.Subscribe("ShowItemPanel", param =>
+        showItemHandler = item =>
         {
-            currentItem = param as Item;    // 뭔지 잘 모르겠으니 한번 봐보길
+            currentItem = item as Item;
             if (currentItem != null)
             {
                 ShowCorrectPanel(currentItem);
             }
-        });
+        };
+
+        EventBus.Subscribe("ShowItemPanel", showItemHandler);
 
         resourceButton.onClick.AddListener(() =>
         {
@@ -50,14 +54,7 @@ public class ItemPanelController : MonoBehaviour
 
     private void OnDisable()
     {
-        EventBus.Unsubscribe("ShowItemPanel", param =>
-        {
-            currentItem = param as Item;
-            if (currentItem != null)
-            {
-                ShowCorrectPanel(currentItem);
-            }
-        });
+        EventBus.Unsubscribe("ShowItemPanel", showItemHandler);
     }
 
     private void ShowCorrectPanel(Item item)

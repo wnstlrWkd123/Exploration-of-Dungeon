@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
         cursorSensor = GetComponent<PlayerCursorSensor>();
         _rigidbody = GetComponent<Rigidbody>();
 
-        //나중에 팩토리패턴으로
         controls.Player.Move.started += OnMove;
         controls.Player.Move.performed += OnMove;
         controls.Player.Move.canceled += OnMove;

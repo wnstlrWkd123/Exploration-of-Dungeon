@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -29,6 +30,9 @@ public class Player : MonoBehaviour
     private float additionalJumpPower = 0f; // 추가 점프력
     public float JumpPower => jumpPower + additionalJumpPower;
 
+    private Action<object> speedBuffHandler;
+    private Action<object> jumpBuffHandler;
+
     private void Awake()
     {
         currentHitPoint = maxHitPoint;
@@ -38,18 +42,21 @@ public class Player : MonoBehaviour
     {
         EventBus.Subscribe("Heal", Heal);
         EventBus.Subscribe("TakeDamage", TakeDamage);
-        EventBus.Subscribe("SpeedBuff", (object data) => SpeedBuff((BuffData)data));
-        EventBus.Subscribe("JumpBuff", (object data) => JumpBuff((BuffData)data));
+        speedBuffHandler = data => SpeedBuff((BuffData)data);
+        EventBus.Subscribe("SpeedBuff", speedBuffHandler);
+        jumpBuffHandler = data => JumpBuff((BuffData)data);
+        EventBus.Subscribe("JumpBuff", jumpBuffHandler);
     }
 
     private void OnDisable()
     {
         EventBus.Unsubscribe("Heal", Heal);
         EventBus.Unsubscribe("TakeDamage", TakeDamage);
-        EventBus.Unsubscribe("SpeedBuff", (object data) => SpeedBuff((BuffData)data));
-        EventBus.Unsubscribe("JumpBuff", (object data) => JumpBuff((BuffData)data));
+        EventBus.Unsubscribe("SpeedBuff", speedBuffHandler);
+        EventBus.Unsubscribe("JumpBuff", jumpBuffHandler);
     }
 
+    // 플레이어 체력 회복
     public void Heal(object value)
     {
         currentHitPoint += (float)value;
@@ -58,6 +65,7 @@ public class Player : MonoBehaviour
         EventBus.Publish("PlayerHitPointChanged", currentHitPoint / maxHitPoint);
     }
 
+    // 플레이어 피해
     public void TakeDamage(object damage)
     {
         currentHitPoint -= (float)damage;
@@ -66,6 +74,7 @@ public class Player : MonoBehaviour
         EventBus.Publish("PlayerHitPointChanged", currentHitPoint / maxHitPoint);
     }
 
+    // 플레이어 스피드 제한 증가 버프
     private void SpeedBuff(BuffData data)
     {
         StartCoroutine(SpeedBuffRoutine(data.value, data.duration));
@@ -78,6 +87,7 @@ public class Player : MonoBehaviour
         additionalMaxSpeed -= value;
     }
 
+    // 플레이어 점프력 증가 버프
     private void JumpBuff(BuffData data)
     {
         StartCoroutine(JumpBuffRoutine(data.value, data.duration));
