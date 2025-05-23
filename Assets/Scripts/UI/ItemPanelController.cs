@@ -23,10 +23,10 @@ public class ItemPanelController : MonoBehaviour
     {
         EventBus.Subscribe("ShowItemPanel", param =>
         {
-            currentItem = param as Item;
+            currentItem = param as Item;    // 뭔지 잘 모르겠으니 한번 봐보길
             if (currentItem != null)
             {
-                ShowCorrectPanel(currentItem.itemData);
+                ShowCorrectPanel(currentItem);
             }
         });
 
@@ -55,20 +55,20 @@ public class ItemPanelController : MonoBehaviour
             currentItem = param as Item;
             if (currentItem != null)
             {
-                ShowCorrectPanel(currentItem.itemData);
+                ShowCorrectPanel(currentItem);
             }
         });
     }
 
-    private void ShowCorrectPanel(ItemData data)
+    private void ShowCorrectPanel(Item item)
     {
-        switch (data.itemType)
+        switch (item.itemType)
         {
             case ItemType.Resource:
-                SetResourcePanel(data);
+                SetResourcePanel(item.itemData);
                 break;
             case ItemType.Consumable:
-                SetConsumablePanel(data);
+                SetConsumablePanel(item.itemData);
                 break;
         }
     }

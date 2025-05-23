@@ -2742,6 +2742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 526e769604984c04cad76e54c47b91cf, type: 2}
+  itemType: 0
 --- !u!1 &2230530225217887539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2920,8 +2921,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 71e6c47112491824ab784d1de9af3d7d, type: 2}
+  itemType: 1
   consumableType: 0
   itemCount: 2
+  type: 0
   value: 10
 --- !u!65 &6275758904994333934
 BoxCollider:
@@ -2957,9 +2960,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: 1387f1e5bf5aec342a95c9dc209bff10, type: 2}
+  itemType: 1
   consumableType: 0
   itemCount: 2
-  value: -20
+  type: 1
+  value: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
